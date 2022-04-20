@@ -1,0 +1,25 @@
+parameters:
+- name: parametersDirectory
+  type: string
+  default: examples/broker/parameters
+- name: environments
+  type: object
+  default:
+  - environmentName: dev
+    azureServiceConnection: Devops - Deploy
+    resourceGroupName: dv-events003-rg
+    resourceGroupLocation: northeurope
+    parametersFile:  dev.parameters.json
+  - environmentName: uat
+    azureServiceConnection: Devops - Deploy
+    resourceGroupName: qa-events003-rg
+    resourceGroupLocation: westeurope
+    parametersFile:  uat.parameters.json
+
+stages:
+- template: stages/main-stages.yml
+  parameters:
+    templateFile: broker.bicep
+    parametersDirectory: ${{ parameters.parametersDirectory }}
+    environments: ${{ parameters.environments }}
+    

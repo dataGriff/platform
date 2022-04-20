@@ -1,0 +1,17 @@
+parameters:
+- name: parametersDirectory
+  type: string
+- name: templateFile
+  type: string
+
+
+jobs:
+- job:
+  pool:
+    vmImage: 'windows-latest'
+  
+  steps:
+  - template: steps/ci-steps.yml
+    parameters:
+      parametersDirectory: ${{ parameters.parametersDirectory }}
+      templateFile: ${{ parameters.templateFile }}

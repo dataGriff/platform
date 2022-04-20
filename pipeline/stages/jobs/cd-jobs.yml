@@ -1,0 +1,29 @@
+parameters:
+- name: templateFile
+  type: string
+- name: parametersFile
+  type: string
+- name: azureServiceConnection
+  type: string
+- name: resourceGroupName
+  type: string
+- name: resourceGroupLocation
+  type: string
+
+
+jobs:
+- job:
+  pool:
+    vmImage: 'windows-latest'
+  
+  steps:
+  - template: steps/cd-steps.yml 
+    parameters:
+      templateFile: ${{ parameters.templateFile }}
+      parametersFile: ${{ parameters.parametersFile }}
+      azureServiceConnection: ${{ parameters.azureServiceConnection }}
+      resourceGroupName: ${{ parameters.resourceGroupName }}
+      resourceGroupLocation: ${{ parameters.resourceGroupLocation }}
+
+
+

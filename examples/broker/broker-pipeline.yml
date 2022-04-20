@@ -1,0 +1,40 @@
+trigger:
+  branches:
+    include:
+    - main
+    - feature/*
+  paths:
+    exclude:
+    - README.md
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: platform/Pipeline.Environment
+
+variables:
+- name: resourceGroupLocation
+  value: northeurope
+- name: testAzureServiceConnection
+  value: Devops - Deploy
+- name: prodAzureServiceConnection
+  value: Devops - Deploy
+- name: brokerName
+  value: events003
+
+extends:
+  template: pipeline/broker-pipeline.yml@templates
+  parameters:
+    parametersDirectory: examples/broker/parameters
+    environments:  
+    - environmentName: dev
+      azureServiceConnection:  ${{ variables.testAzureServiceConnection }}
+      resourceGroupName: dv-${{ variables.brokerName }}-rg
+      resourceGroupLocation: ${{ variables.resourceGroupLocation }}
+      parametersFile:  dev.parameters.json
+    - environmentName: uat
+      azureServiceConnection:  ${{ variables.testAzureServiceConnection }}
+      resourceGroupName: qa-${{ variables.brokerName }}-rg
+      resourceGroupLocation: ${{ variables.resourceGroupLocation }}
+      parametersFile:  uat.parameters.json

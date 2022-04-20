@@ -1,0 +1,37 @@
+parameters:
+- name: azureServiceConnection
+  type: string
+- name: resourceGroupName
+  type: string
+- name: resourceGroupLocation
+  type: string
+- name: templateFile
+  type: string
+- name: parametersFile
+  type: string
+
+steps:
+- task: DownloadBuildArtifacts@0
+  displayName: 'Download artifact'
+  inputs:
+    buildType: 'current'
+    downloadType: 'single'
+    artifactName: 'infra'
+    downloadPath: '$(System.ArtifactsDirectory)'
+
+- powershell: |
+    tree "$(System.ArtifactsDirectory)" /F
+  displayName: "Debug: Show directory tree"
+  
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: ${{ parameters.azureServiceConnection }}
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      az --version
+      az group create --name ${{ parameters.resourceGroupName }} --location ${{ parameters.resourceGroupLocation }}
+      az deployment group create \
+        --resource-group ${{ parameters.resourceGroupName }} \
+        --template-file infra/broker.bicep \
+        --parameters '$(System.ArtifactsDirectory)'/infra/${{ parameters.parametersFile }}
