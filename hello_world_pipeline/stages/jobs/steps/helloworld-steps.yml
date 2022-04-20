@@ -1,0 +1,11 @@
+parameters:
+- name: resourceTypes
+  type: object
+- name: organisationNameSpace
+  type: string
+- name: environment
+  type: string
+
+steps:
+- ${{ each resourceType in parameters.resourceTypes }}:
+  - script: echo 'Hello world in ${{ parameters.environment }} environment for the ${{ parameters.organisationNameSpace }} organisatioal namespace for the ${{ resourceType }} resource type.'

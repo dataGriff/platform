@@ -1,0 +1,21 @@
+parameters:
+- name: environments
+  type: object
+  default:
+  - environmentName: dev
+  - environmentName: uat
+  - environmentName: prd
+- name: organisationNameSpace
+  type: string
+  default: dgrf 
+- name: productionEnvironment
+  type: string
+  default: dgrf 
+
+
+stages:
+- template: stages/helloworld-stages.yml
+  parameters:
+    environments: ${{ parameters.environments }}
+    organisationNameSpace: ${{ parameters.organisationNameSpace }}
+    productionEnvironment: ${{ parameters.productionEnvironment }}

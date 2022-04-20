@@ -1,0 +1,27 @@
+parameters:
+- name: environment
+  type: string
+- name: organisationNameSpace
+  type: string
+
+jobs:
+- job:
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - template: steps/helloworld-steps.yml  # Template reference:
+    parameters:
+      resourceTypes: [storage, configuration]
+      organisationNameSpace: ${{ parameters.organisationNameSpace }}
+      environment: ${{ parameters.environment }}
+
+
+- job:
+  pool:
+    vmImage: 'windows-latest'
+  steps:
+  - template: steps/helloworld-steps.yml  # Template reference
+    parameters:
+      resourceTypes: [application]
+      organisationNameSpace: ${{ parameters.organisationNameSpace }}
+      environment: ${{ parameters.environment }}

@@ -1,0 +1,26 @@
+trigger:
+  branches:
+    include:
+    - main
+    - feature/*
+  paths:
+    include:
+    - pipeline/*
+    - remotecall/*
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: platform/Pipeline.HelloWorld
+
+extends:
+  template: pipeline/helloworld-pipeline.yml@templates
+  parameters:
+    environments:  
+      - environmentName: 'ft'
+      - environmentName: 'it'
+      - environmentName: 'pr'
+    organisationNameSpace: dataGriff
+    productionEnvironment: pr
+

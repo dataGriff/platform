@@ -1,0 +1,23 @@
+parameters:
+- name: environments
+  type: object
+- name: organisationNameSpace
+  type: string
+- name: productionEnvironment
+  type: string
+
+stages:
+  - ${{ each environment in parameters.environments }}:
+    - stage: ${{ environment.environmentName }}
+      variables:
+      - name: isMain
+        value: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')] 
+      - name: isTest
+        value: $[ne('${{ parameters.productionEnvironment }}','${{ environment.environmentName }}')] 
+      condition: and(succeeded(),or(eq(variables.isMain,'true'),eq(variables.isTest,'true')))
+      jobs:
+      - template: jobs/helloworld-jobs.yml
+        parameters:
+          environment: ${{ environment.environmentName }}
+          organisationNameSpace: ${{ parameters.organisationNameSpace }}
+  
