@@ -1,0 +1,42 @@
+parameters:
+- name: templateFile
+  type: string
+
+steps:
+- checkout: templates
+
+- powershell: |
+    tree "$(Build.Repository.LocalPath)" /F
+    tree "$(Pipeline.Workspace)" /F
+    tree "$(System.ArtifactsDirectory)" /F
+    tree "$(Build.ArtifactStagingDirectory)" /F
+    tree "$(Agent.RootDirectory)" /F
+    tree "$(Build.Repository.LocalPath)" /F
+  displayName: "Debug: Show directory tree"
+
+- task: CopyFiles@2
+  displayName: 'Include infra in the artifact'
+  inputs:
+    SourceFolder: '$(Build.Repository.LocalPath)\infra'
+    Contents: ${{ parameters.templateFile }}
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish artifact'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'infra'
+    publishLocation: 'Container'
+
+- powershell: |
+    tree "$(Build.ArtifactStagingDirectory)" /F
+  displayName: "Debug: Show directory tree"
+
+- powershell: |
+    tree "$(Build.Repository.LocalPath)" /F
+    tree "$(Pipeline.Workspace)" /F
+    tree "$(System.ArtifactsDirectory)" /F
+    tree "$(Build.ArtifactStagingDirectory)" /F
+    tree "$(Agent.RootDirectory)" /F
+    tree "$(Build.Repository.LocalPath)" /F
+  displayName: "Debug: Show directory tree"
