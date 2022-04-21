@@ -9,9 +9,15 @@ jobs:
 - job:
   pool:
     vmImage: 'windows-latest'
-  
   steps:
-  - template: steps/ci-steps.yml
+  - template: steps/ci-steps-remote.yml
     parameters:
       parametersDirectory: ${{ parameters.parametersDirectory }}
+
+- job:
+  pool:
+    vmImage: 'windows-latest'
+  steps:
+  - template: steps/ci-steps-local.yml
+    parameters:
       templateFile: ${{ parameters.templateFile }}
